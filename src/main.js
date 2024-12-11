@@ -1,4 +1,4 @@
-// query selector variables go here 👇
+// query selector variables go here 👇 -----------------------------------------------
 
 // Poster elements
 const posterImg = document.querySelector('.poster-img');
@@ -41,7 +41,7 @@ const savedPostersDisplay = document.querySelector('.saved-posters-grid');
 // Display for unmotivational posters
 const unmotivationalPosterDisplay = document.querySelector('.unmotivational-posters-grid');
 
-// we've provided you with some data to work with 👇
+// we've provided you with some data to work with 👇 -----------------------------------------------
 // tip: you can tuck this data out of view with the dropdown found near the line number where the variable is declared 
 var images = [
   "./assets/bees.jpg",
@@ -267,13 +267,27 @@ let unmotivationalPosters = [
   }
 ];
 
+// Important global variables 👇 -----------------------------------------------
 var savedUnmotivationalPosters = [];
 var savedPosters = [];
 var currentPoster;
 
-// event listeners go here 👇
+// event listeners go here 👇 -------------------------------------------------------
 // Display a random poster on content load
 document.addEventListener('DOMContentLoaded', loadContentEventHandler);
+
+// Adjust one part of the poster
+posterImg.addEventListener('dblclick', () => { 
+  changePosterElementEventHandler('img')
+});
+
+posterTitle.addEventListener('dblclick', () => { 
+  changePosterElementEventHandler('title')
+});
+
+posterQuote.addEventListener('dblclick', () => { 
+  changePosterElementEventHandler('quote')
+});
 
 // Save poster to Saved Posters list
 savePosterBtn.addEventListener('click', savePosterEventHandler);
@@ -316,7 +330,7 @@ makePosterBtn.addEventListener('click', userPosterEventHandler);
 // Delete unmotivational poster
 unmotivationalPosterDisplay.addEventListener('dblclick', deleteUnmotivPosterEventHandler);
 
-// functions and event handlers go here 👇
+// event handlers go here 👇 -----------------------------------------------
 // (we've provided two to get you started)!
 
 // Handle on content load event
@@ -331,18 +345,31 @@ function randomPosterEventHandler() {
   changePosterDisplay(posterImg, posterTitle, posterQuote);
 }
 
+// Handle regenerating one specifc poster element
+function changePosterElementEventHandler(element) {
+  getRandomPoster(images, titles, quotes, element);
+  changePosterDisplay(posterImg, posterTitle, posterQuote);
+}
+
 // Handle user poster creation and display
 function userPosterEventHandler() {
   event.preventDefault();
-  getUserPoster();
+  const gotPoster = getUserPoster();
+  
+  // Halt events if form is not filled out correctly
+  if (!gotPoster) {
+    return;
+  }
+
   addNewPosterElements(currentPoster.imageURL, currentPoster.title, currentPoster.quote);
   changeView(posterFormView, mainView);
   changePosterDisplay(posterImg, posterTitle, posterQuote);
 }
 
+// Handler for adding posters to saved posters
 function savePosterEventHandler() {
   addToSaved();
-  populatePosters(savedPostersDisplay, savedPosters);
+  populatePosters(savedPostersDisplay, savedPosters, 'saved');
   changeView(mainView, savedView);
 }
 
@@ -363,11 +390,32 @@ function deleteUnmotivPosterEventHandler(event) {
   populatePosters(unmotivationalPosterDisplay, savedUnmotivationalPosters, 'unmotivational');
 }
 
+// functions go here 👇 ------------------------------------------------
 // Select random poster elements and set them as currentPoster object
-function getRandomPoster(imgsArray, titlesArray, quotesArray) {
-  let randomImgURL = imgsArray[getRandomIndex(imgsArray)];
-  let randomTitle = titlesArray[getRandomIndex(titlesArray)];
-  let randomQuote = quotesArray[getRandomIndex(quotesArray)];
+function getRandomPoster(imgsArray, titlesArray, quotesArray, element = '') {
+  let randomImgURL;
+  let randomTitle;
+  let randomQuote;
+
+  if (element === '') { 
+    randomImgURL = imgsArray[getRandomIndex(imgsArray)];
+    randomTitle = titlesArray[getRandomIndex(titlesArray)];
+    randomQuote = quotesArray[getRandomIndex(quotesArray)];
+  } else {
+    if (element === 'img') {
+      randomImgURL = imgsArray[getRandomIndex(imgsArray)];
+      randomTitle = currentPoster.title;
+      randomQuote = currentPoster.quote;
+    } else if (element === 'title') {
+      randomImgURL = currentPoster.imageURL;
+      randomTitle = titlesArray[getRandomIndex(titlesArray)];
+      randomQuote = currentPoster.quote;
+    } else if (element === 'quote'){
+      randomImgURL = currentPoster.imageURL;
+      randomTitle = currentPoster.title;
+      randomQuote = quotesArray[getRandomIndex(quotesArray)];
+    }
+  }
 
   currentPoster = createPoster(randomImgURL, randomTitle, randomQuote);
 }
@@ -378,7 +426,15 @@ function getUserPoster() {
   let posterTitle = inputPosterTitle.value;
   let posterQuote = inputPosterQuote.value;
   
-  currentPoster = createPoster(posterImgURL, posterTitle, posterQuote);
+  // verify form filled
+  var verification = verifyInput(posterImgURL, posterTitle, posterQuote);
+
+  if (verification === true) {
+    currentPoster = createPoster(posterImgURL, posterTitle, posterQuote);
+    return true;
+  } else {
+    return false;
+  }
 }
 
 // Select random element from specified array
@@ -466,11 +522,26 @@ function targetPoster(event) {
   } else if (event.target.parentElement.classList.contains('mini-poster')) {
     return event.target.parentElement;
   } else {
-    displayMessage('Error: Double click a poster to delete it!');
+    displayMessage('Double click a poster to delete it!');
+  }
+}
+
+// Verify user input
+function verifyInput(image, title, quote) {
+  if (image !== '' && title !== '' && quote !== '') {
+    if (typeof image === 'string' && typeof title === 'string' && typeof quote === 'string') {
+      return true;
+    } else {
+      displayMessage('One or more inputs are invalid!');
+      return false;
+    }
+  } else {
+    displayMessage('All inputs are required!');
+    return false;
   }
 }
 
 // Display messages to user
 function displayMessage(message) {
-  alert(message);
+  alert('Error: ' + message);
 }
