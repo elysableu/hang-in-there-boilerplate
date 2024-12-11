@@ -278,15 +278,15 @@ document.addEventListener('DOMContentLoaded', loadContentEventHandler);
 
 // Adjust one part of the poster
 posterImg.addEventListener('dblclick', () => { 
-  changePosterElement(posterImg, images)
+  changePosterElementEventHandler('img')
 });
 
 posterTitle.addEventListener('dblclick', () => { 
-  changePosterElement(posterTitle, titles)
+  changePosterElementEventHandler('title')
 });
 
 posterQuote.addEventListener('dblclick', () => { 
-  changePosterElement(posterQuote, quotes)
+  changePosterElementEventHandler('quote')
 });
 
 // Save poster to Saved Posters list
@@ -345,6 +345,12 @@ function randomPosterEventHandler() {
   changePosterDisplay(posterImg, posterTitle, posterQuote);
 }
 
+// Handle regenerating one specifc poster element
+function changePosterElementEventHandler(element) {
+  getRandomPoster(images, titles, quotes, element);
+  changePosterDisplay(posterImg, posterTitle, posterQuote);
+}
+
 // Handle user poster creation and display
 function userPosterEventHandler() {
   event.preventDefault();
@@ -386,10 +392,30 @@ function deleteUnmotivPosterEventHandler(event) {
 
 // functions go here 👇 ------------------------------------------------
 // Select random poster elements and set them as currentPoster object
-function getRandomPoster(imgsArray, titlesArray, quotesArray) {
-  let randomImgURL = imgsArray[getRandomIndex(imgsArray)];
-  let randomTitle = titlesArray[getRandomIndex(titlesArray)];
-  let randomQuote = quotesArray[getRandomIndex(quotesArray)];
+function getRandomPoster(imgsArray, titlesArray, quotesArray, element = '') {
+  let randomImgURL;
+  let randomTitle;
+  let randomQuote;
+
+  if (element === '') { 
+    randomImgURL = imgsArray[getRandomIndex(imgsArray)];
+    randomTitle = titlesArray[getRandomIndex(titlesArray)];
+    randomQuote = quotesArray[getRandomIndex(quotesArray)];
+  } else {
+    if (element === 'img') {
+      randomImgURL = imgsArray[getRandomIndex(imgsArray)];
+      randomTitle = currentPoster.title;
+      randomQuote = currentPoster.quote;
+    } else if (element === 'title') {
+      randomImgURL = currentPoster.imageURL;
+      randomTitle = titlesArray[getRandomIndex(titlesArray)];
+      randomQuote = currentPoster.quote;
+    } else if (element === 'quote'){
+      randomImgURL = currentPoster.imageURL;
+      randomTitle = currentPoster.title;
+      randomQuote = quotesArray[getRandomIndex(quotesArray)];
+    }
+  }
 
   currentPoster = createPoster(randomImgURL, randomTitle, randomQuote);
 }
