@@ -378,7 +378,12 @@ function getUserPoster() {
   let posterTitle = inputPosterTitle.value;
   let posterQuote = inputPosterQuote.value;
   
-  currentPoster = createPoster(posterImgURL, posterTitle, posterQuote);
+  // verify form filled
+  var verification = verifyInput(posterImgURL, posterTitle, posterQuote);
+
+  if (verification === true) {
+    currentPoster = createPoster(posterImgURL, posterTitle, posterQuote);
+  }
 }
 
 // Select random element from specified array
@@ -466,11 +471,30 @@ function targetPoster(event) {
   } else if (event.target.parentElement.classList.contains('mini-poster')) {
     return event.target.parentElement;
   } else {
-    displayMessage('Error: Double click a poster to delete it!');
+    displayMessage('Double click a poster to delete it!');
+  }
+}
+
+// Verify user input
+function verifyInput(image, title, quote) {
+  if (image !== '' && title !== '' && quote !== '') {
+    console.log('imageType: ', typeof image);
+    console.log('titleType: ', typeof title);
+    console.log('quoteType: ', typeof quote);
+
+    if (typeof image === 'string' && typeof title === 'string' && typeof quote === 'string') {
+      return true;
+    } else {
+      displayMessage('One or more inputs are invalid!');
+      return false;
+    }
+  } else {
+    displayMessage('All inputs are required!');
+    return false;
   }
 }
 
 // Display messages to user
 function displayMessage(message) {
-  alert(message);
+  alert('Error: ' + message);
 }
