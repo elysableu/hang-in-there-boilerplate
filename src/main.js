@@ -334,12 +334,18 @@ function randomPosterEventHandler() {
 // Handle user poster creation and display
 function userPosterEventHandler() {
   event.preventDefault();
-  getUserPoster();
+  const gotPoster = getUserPoster();
+
+  if (!gotPoster) {
+    return;
+  }
+
   addNewPosterElements(currentPoster.imageURL, currentPoster.title, currentPoster.quote);
   changeView(posterFormView, mainView);
   changePosterDisplay(posterImg, posterTitle, posterQuote);
 }
 
+// Handler for adding posters to saved posters
 function savePosterEventHandler() {
   addToSaved();
   populatePosters(savedPostersDisplay, savedPosters);
@@ -383,6 +389,9 @@ function getUserPoster() {
 
   if (verification === true) {
     currentPoster = createPoster(posterImgURL, posterTitle, posterQuote);
+    return true;
+  } else {
+    return false;
   }
 }
 
@@ -478,10 +487,6 @@ function targetPoster(event) {
 // Verify user input
 function verifyInput(image, title, quote) {
   if (image !== '' && title !== '' && quote !== '') {
-    console.log('imageType: ', typeof image);
-    console.log('titleType: ', typeof title);
-    console.log('quoteType: ', typeof quote);
-
     if (typeof image === 'string' && typeof title === 'string' && typeof quote === 'string') {
       return true;
     } else {
