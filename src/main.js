@@ -275,6 +275,19 @@ var currentPoster;
 // Display a random poster on content load
 document.addEventListener('DOMContentLoaded', loadContentEventHandler);
 
+// Adjust one part of the poster
+posterImg.addEventListener('dblclick', () => { 
+  changePosterElement(posterImg, images)
+});
+
+posterTitle.addEventListener('dblclick', () => { 
+  changePosterElement(posterTitle, titles)
+});
+
+posterQuote.addEventListener('dblclick', () => { 
+  changePosterElement(posterQuote, quotes)
+});
+
 // Save poster to Saved Posters list
 savePosterBtn.addEventListener('click', savePosterEventHandler);
 
@@ -335,7 +348,8 @@ function randomPosterEventHandler() {
 function userPosterEventHandler() {
   event.preventDefault();
   const gotPoster = getUserPoster();
-
+  
+  // Halt events if form is not filled out correctly
   if (!gotPoster) {
     return;
   }
@@ -348,7 +362,7 @@ function userPosterEventHandler() {
 // Handler for adding posters to saved posters
 function savePosterEventHandler() {
   addToSaved();
-  populatePosters(savedPostersDisplay, savedPosters);
+  populatePosters(savedPostersDisplay, savedPosters, 'saved');
   changeView(mainView, savedView);
 }
 
@@ -368,6 +382,8 @@ function deleteUnmotivPosterEventHandler(event) {
   deletePoster(targetedPoster, savedUnmotivationalPosters);
   populatePosters(unmotivationalPosterDisplay, savedUnmotivationalPosters, 'unmotivational');
 }
+
+
 
 // Select random poster elements and set them as currentPoster object
 function getRandomPoster(imgsArray, titlesArray, quotesArray) {
