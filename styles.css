@@ -116,11 +116,6 @@ button:hover {
   padding: 20px;
 }
 
-.unmotivational-posters-grid {
-display: flex;
-flex-wrap: wrap;
-}
-
 .mini-poster {
   background: black;
   color: white;
@@ -148,4 +143,17 @@ flex-wrap: wrap;
   letter-spacing: 5px;
   margin-bottom: 10px;
   text-transform: uppercase;
+}
+
+
+/* ~~~~~ UNMOTIVATIONAL POSTER SECTION ~~~~~ */
+
+.unmotivational-posters-grid {
+  display: flex;
+  flex-wrap: wrap;
+  }
+
+.unmotivational {
+  background-color: #808080;
+  border-radius: 10px;
 }
