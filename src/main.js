@@ -1,4 +1,4 @@
-// query selector variables go here 👇
+// query selector variables go here 👇 -----------------------------------------------
 
 // Poster elements
 const posterImg = document.querySelector('.poster-img');
@@ -41,7 +41,7 @@ const savedPostersDisplay = document.querySelector('.saved-posters-grid');
 // Display for unmotivational posters
 const unmotivationalPosterDisplay = document.querySelector('.unmotivational-posters-grid');
 
-// we've provided you with some data to work with 👇
+// we've provided you with some data to work with 👇 -----------------------------------------------
 // tip: you can tuck this data out of view with the dropdown found near the line number where the variable is declared 
 var images = [
   "./assets/bees.jpg",
@@ -267,11 +267,12 @@ let unmotivationalPosters = [
   }
 ];
 
+// Important global variables 👇 -----------------------------------------------
 var savedUnmotivationalPosters = [];
 var savedPosters = [];
 var currentPoster;
 
-// event listeners go here 👇
+// event listeners go here 👇 -------------------------------------------------------
 // Display a random poster on content load
 document.addEventListener('DOMContentLoaded', loadContentEventHandler);
 
@@ -329,7 +330,7 @@ makePosterBtn.addEventListener('click', userPosterEventHandler);
 // Delete unmotivational poster
 unmotivationalPosterDisplay.addEventListener('dblclick', deleteUnmotivPosterEventHandler);
 
-// functions and event handlers go here 👇
+// event handlers go here 👇 -----------------------------------------------
 // (we've provided two to get you started)!
 
 // Handle on content load event
@@ -383,8 +384,7 @@ function deleteUnmotivPosterEventHandler(event) {
   populatePosters(unmotivationalPosterDisplay, savedUnmotivationalPosters, 'unmotivational');
 }
 
-
-
+// functions go here 👇 ------------------------------------------------
 // Select random poster elements and set them as currentPoster object
 function getRandomPoster(imgsArray, titlesArray, quotesArray) {
   let randomImgURL = imgsArray[getRandomIndex(imgsArray)];
